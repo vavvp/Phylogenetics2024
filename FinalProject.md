@@ -10,8 +10,42 @@ In this study, we examine the phylogenetic relationships among species of the Kl
 ## Methodology
 **Sample Selection:** Organisms selected for this analysis included representatives from the Klebsormidium and Interfilum genera with sequences obtained for ITS1 and rbcL markers.
 
-**Data Extraction and Processing:** Sequences were downloaded from GenBank, and the regions corresponding to ITS1 and rbcL markers were extracted using Biopython. The extracted sequences were combined by marker to generate comprehensive ITS1 and rbcL datasets.
+```
+import os
+import glob
 
+def replace_fasta_id_with_filename(fasta_file):
+    file_name = os.path.splitext(os.path.basename(fasta_file))[0]
+    with open(fasta_file, 'r') as file:
+        lines = file.readlines()
+
+    with open(fasta_file, 'w') as file:
+        for line in lines:
+            if line.startswith('>'):
+                new_id = f">{file_name}\n"
+                file.write(new_id)
+            else:
+                file.write(line)
+fasta_files = glob.glob('/content/*.fasta')
+
+for fasta_file in fasta_files:
+    replace_fasta_id_with_filename(fasta_file)
+```    
+**Data Extraction and Processing:** Sequences were downloaded from GenBank, and the regions corresponding to ITS1 and rbcL markers were extracted using Biopython. The extracted sequences were combined by marker to generate comprehensive ITS1 and rbcL datasets.
+```
+from Bio import SeqIO
+
+input_file = "/content/Interfilum_massjukiae_2102.fasta"
+output_file = "/content/Interfilum_massjukiae_2102_EXTRACT.fasta"
+
+with open(output_file, "w") as output_handle:
+    for record in SeqIO.parse(input_file, "fasta"):
+        # Извлекаем регион ITS1 (позиции  72818..74245, учитывая Python-счет от 0)
+        ITS1_seq = record.seq[72817:74245]
+        ITS1_record = record[:]
+        ITS1_record.seq = ITS1_seq
+        SeqIO.write(ITS1_record, output_handle, "fasta")
+```
 **Sequence Alignment:** Alignments for each marker were performed independently using the MAFFT software with the `--auto` setting, producing `aligned_ITS.fasta` and `aligned_rbcL.fasta` for subsequent analyses.
 
 ## Phylogenetic Tree Construction
