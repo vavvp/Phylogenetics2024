@@ -19,7 +19,7 @@ In this study, we examine the phylogenetic relationships among species of the Kl
 FastTree was used to construct initial phylogenetic trees with the Jukes-Cantor model, which provides a simple model suitable for broad evolutionary insights.
 **Command used:**
 ```
-iFastTree -nt aligned_ITS.fasta > ITS1.tree
+FastTree -nt aligned_ITS.fasta > ITS1.tree
 FastTree -nt aligned_rbcL.fasta > rbcL.tree
 ```
 
